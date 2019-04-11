@@ -24,16 +24,6 @@ def home():
     return f"""
 {start}    
 {navigation}
-<section id="share-head-section" class="bg-dark text-light">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center py-5">
-                <h1 class="display-4">Welcome!</h1>
-                <p class="lead">This is only school project.</p>
-            </div>
-        </div>
-    </div>
-</section>
 {end}      
 """
 
@@ -42,16 +32,6 @@ def cinemas():
     return f"""
 {start}    
 {navigation}
-<section id="share-head-section" class="bg-dark text-light">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center py-5">
-                <h1 class="display-4">Cinemas</h1>
-                <p class="lead">Add, Remove and Filter Cinemas.</p>
-            </div>
-        </div>
-    </div>
-</section>
 {end}      
 """
 
@@ -68,7 +48,7 @@ def movies():
 {navigation}
 {movie_form}
 {filter_section}
-<table class="table table-striped">
+<table class='table table-striped'>
     <thead>
       <tr>
         <th>Title</th>
@@ -78,10 +58,9 @@ def movies():
       </tr>
     </thead>
     <tbody>
-      {"".join(movie_data)}
+      {''.join(movie_data)}
     </tbody>
-  </table>
-
+</table>
 {end}      
 """
     if request.method == "POST":
@@ -109,19 +88,19 @@ def movies():
 {navigation}
 {movie_form}
 {filter_section}
-<table class="table table-striped">
+<table class='table table-striped'>
     <thead>
       <tr>
         <th>Title</th>
         <th>Description</th>
         <th>Rating</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
-      {"".join(movie_data)}
+      {''.join(movie_data)}
     </tbody>
-  </table>
-
+</table>
 {end}      
 """
     
@@ -131,16 +110,6 @@ def tickets():
     return f"""
 {start}    
 {navigation}
-<section id="share-head-section" class="bg-dark text-light">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center py-5">
-                <h1 class="display-4">Tickets</h1>
-                <p class="lead">Add, Remove and Filter Tickets.</p>
-            </div>
-        </div>
-    </div>
-</section>
 {end}      
 """
 
@@ -149,16 +118,6 @@ def payments():
     return f"""
 {start}    
 {navigation}
-<section id="share-head-section" class="bg-dark text-light">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center py-5">
-                <h1 class="display-4">Payments</h1>
-                <p class="lead">Add, Remove and Filter Payments.</p>
-            </div>
-        </div>
-    </div>
-</section>
 {end}      
 """
 
