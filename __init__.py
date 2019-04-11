@@ -50,15 +50,15 @@ def movies():
 {filter_section}
 <table class='table table-striped'>
     <thead>
-      <tr>
+    <tr>
         <th>Title</th>
-        <th>Description</th>
+        <th style="width:60%">Description</th>
         <th>Rating</th>
         <th></th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      {''.join(movie_data)}
+    {''.join(movie_data)}
     </tbody>
 </table>
 {end}      
@@ -92,7 +92,7 @@ def movies():
     <thead>
       <tr>
         <th>Title</th>
-        <th>Description</th>
+        <th style="width:60%">Description</th>
         <th>Rating</th>
         <th></th>
       </tr>
