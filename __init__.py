@@ -1,5 +1,6 @@
 from flask import Flask, request
 from psycopg2 import connect, OperationalError, Error
+from elements import navigation, start, end, movie_form, filter_section
 
 username = "postgres"
 passwd = "coderslab"
@@ -16,15 +17,150 @@ def connect_cinemas_db():
         print(e)
     return connection
 
-def add_movie(name, desc, rating):
-    #TUTAJ DALEJ
-
-
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def home():
-    return "Hello World"
+    return f"""
+{start}    
+{navigation}
+<section id="share-head-section" class="bg-dark text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center py-5">
+                <h1 class="display-4">Welcome!</h1>
+                <p class="lead">This is only school project.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{end}      
+"""
+
+@app.route("/cinemas", methods=["GET", "POST"])
+def cinemas():
+    return f"""
+{start}    
+{navigation}
+<section id="share-head-section" class="bg-dark text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center py-5">
+                <h1 class="display-4">Cinemas</h1>
+                <p class="lead">Add, Remove and Filter Cinemas.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{end}      
+"""
+
+@app.route("/movies", methods=["GET", "POST"])
+def movies():
+    if request.method == "GET":
+        db_connection = connect_cinemas_db()
+        cursor = db_connection.cursor()
+        cursor.execute(f"SELECT * FROM movie ORDER BY name")
+        movie_data = [f"<tr><td>{name}</td><td>{description}</td><td>{rating}</td><td><form action='/movies' method='POST'><input type='hidden' name='to_delete' value='{id}'><input class='btn btn-outline-primary' type='submit' value='Delete'></form></td></tr>" for (id, name, description, rating) in cursor]
+        
+        return f"""
+{start}    
+{navigation}
+{movie_form}
+{filter_section}
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {"".join(movie_data)}
+    </tbody>
+  </table>
+
+{end}      
+"""
+    if request.method == "POST":
+        sql = f"""INSERT INTO movie(name, description, rating) VALUES('{request.form.get("name")}', '{request.form.get("description")}', '{request.form.get("rating")}');"""
+        db_connection = connect_cinemas_db()
+        cursor = db_connection.cursor()
+        if request.form.get("to_delete"):
+            cursor.execute(f"DELETE FROM movie WHERE id={request.form.get('to_delete')}")
+            filtering = "ORDER BY name"
+        if request.form.get("name"):
+            cursor.execute(sql)
+            filtering = "ORDER BY name"
+        if request.form.get("sortby") == "name":
+            filtering = "ORDER BY name"
+        if request.form.get("sortby") == "ratedesc":
+            filtering = "ORDER BY rating DESC"
+        if not request.form.get("sortby"):
+            filtering = "ORDER BY name"
+        cursor.execute(f"SELECT * FROM movie {filtering}")
+        movie_data = [f"<tr><td>{name}</td><td>{description}</td><td>{rating}</td><td><form action='/movies' method='POST'><input type='hidden' name='to_delete' value='{id}'><input class='btn btn-outline-primary' type='submit' value='Delete'></form></td></tr>" for (id, name, description, rating) in cursor]
+        cursor.close()
+
+        return f"""
+{start}    
+{navigation}
+{movie_form}
+{filter_section}
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      {"".join(movie_data)}
+    </tbody>
+  </table>
+
+{end}      
+"""
+    
+
+@app.route("/tickets", methods=["GET", "POST"])
+def tickets():
+    return f"""
+{start}    
+{navigation}
+<section id="share-head-section" class="bg-dark text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center py-5">
+                <h1 class="display-4">Tickets</h1>
+                <p class="lead">Add, Remove and Filter Tickets.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{end}      
+"""
+
+@app.route("/payments", methods=["GET", "POST"])
+def payments():
+    return f"""
+{start}    
+{navigation}
+<section id="share-head-section" class="bg-dark text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center py-5">
+                <h1 class="display-4">Payments</h1>
+                <p class="lead">Add, Remove and Filter Payments.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{end}      
+"""
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
